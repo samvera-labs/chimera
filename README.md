@@ -1,24 +1,18 @@
-# README
+# Chimera
+A generic, unbranded implementation of University of Michigan Research Data Repository DeepBlue
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+![chimera](https://commons.wikimedia.org/wiki/Category:Chimera#/media/File:Chimera_(PSF).jpg)
 
-Things you may want to cover:
+## History
+Based on https://github.com/mlibrary/deepblue/
 
-* Ruby version
+## Credits
+Samvera Project Community.
 
-* System dependencies
+Indian University Library.
 
-* Configuration
+University of Michigan Library.
 
-* Database creation
+## Wiki
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+https://github.com/mlibrary/chimera/wiki
