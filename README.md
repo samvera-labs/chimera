@@ -15,4 +15,4 @@ University of Michigan Library.
 
 ## Wiki
 
-https://github.com/mlibrary/chimera/wiki
+https://github.com/samvera-labs/chimera/wiki
