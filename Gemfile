@@ -1,3 +1,6 @@
+# minimum gem update:
+# bundle update --source name_of_gem
+
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
@@ -50,6 +53,7 @@ gem 'jbuilder', '~> 2.5'
 
 # Begin security vulnerability mitigation
 gem 'loofah', '~> 2.2.3'
+gem 'rack', '~> 2.0.6'
 gem 'rubyzip', '~> 1.2.2'
 gem 'sinatra', '~> 2.0.2'
 gem 'sprockets', '~> 3.7.2'
