@@ -20,6 +20,8 @@ Provide the rationale or user story that describes "why" this issue should be ad
 Link to related tickets or prior related work here.
 
 ### Acceptance Criteria
-- [ ] 
-- [ ]
+- [ ] Criteria 1
+- [ ] Criteria 2
+- [ ] Criteria 3
+
 
