@@ -41,7 +41,17 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users
+
+  devise_for :users, controllers: { sessions: 'users/sessions', omniauth_callbacks: "users/omniauth_callbacks" }, skip: [:passwords, :registration]
+  devise_scope :user do
+    get('global_sign_out',
+        to: 'users/sessions#global_logout',
+        as: :destroy_global_session)
+    get 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
+    get 'users/auth/cas', to: 'users/omniauth_authorize#passthru', defaults: { provider: :cas }, as: "new_user_session"
+  end
+
+
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   resources :welcome, only: 'index'
