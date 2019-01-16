@@ -2,6 +2,10 @@ development:
   archivist:
     - archivist1@example.com
   admin:
+    - jhallida@indiana.edu
+    - jvwitten@indiana.edu
+    - rdfloyd@indiana.edu
+    - didesilv@iu.edu
     - blancoj@umich.edu
     - fritx@umich.edu
     - fritx2@umich.edu
