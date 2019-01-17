@@ -1,0 +1,140 @@
+
+/* iu colors */
+$black: #191919;
+$crimson: #990000;
+$cream:#EEEDEB;
+$gold: #f1be48; $dark-gold:#DC8823;
+$limestone: #ACA39A;$dark-limestone:#83786F;
+$mahogany: #4A3C31;
+$majestic: #66435A; $dark-majestic: #512A44;
+$midnight: #006298; $dark-midnight:#01426A;
+$mint: #008264; $dark-mint:#285C4D;
+$bg-white: #fff;
+$all-clear: #009933;
+$minor: #49AFC7;
+$moderate:#F5BB17 ;
+$severe: #F25B19;
+$extreme:#BD0000;
+$default:#eee;
+
+
+/*.btn-default,.panel-default, .default{ background: #eee; border-color: #A7A9AB; }*/
+.bg-hdr{background:  lighten($limestone, 35% ); margin:-1.2em 0  0; padding-top:.5em;;}
+
+.btn-default,.panel-default,.panel-default > .panel-heading, .default{ background: lighten($limestone, 35% ); border-color:  lighten($limestone, 25% ); }
+.btn-default:hover,
+.panel-default:hover,
+.panel-default > .panel-heading:hover,
+.default:hover{ background: lighten($limestone, 75% ); border-color:  lighten($limestone, 15% ); }
+
+.btn-default.active{ background: #fff; box-shadow: none;border-color:  lighten($limestone, 25% ); }
+
+.success{background:  #DDF4EA; border-color:#009933;}
+.info{background:  #E9F6FC  ; border-color:#49AFC7;}
+.message{background: #FDF7E7  ; border-color:#F5BB17;}
+.outage, .error{background:#FDEEE8  ; border-color:#F25B19;}
+
+.btn-default{}
+.btn-primary{ background: $crimson; color: #fff; }
+.btn-success{}
+.btn-info{}
+.btn-warning{}
+.btn-danger{}
+.btn-link{}
+
+
+body{margin: 0; padding: 0;}
+#branding-bar .row, #footer .row{max-width: 99%; }
+#branding-bar + .container-fluid  h1 {  font-family: BentonSansCondRegular, Arial, serif; letter-spacing: 3px; font-weight: bold; }
+#branding-bar + .container-fluid  h1 a{color: $crimson; text-decoration: none}
+
+#masthead_controls{border-bottom: 2px solid $default;border-top: 2px solid $default;; margin: 0 0 1em; }
+.navbar.navbar-default, #masthead_controls, #masthead_controls .navbar, #masthead_controls .navbar.navbar-default a:link{background: #fff; }
+#masthead_controls .navbar.navbar-default{border: none;}
+#masthead_controls .navbar.navbar-default li a{margin-right: 1.4em;}
+#masthead_controls .navbar.navbar-default li a:first-of-type{padding-left:0;}
+
+/*top links */
+
+#masthead_controls .navbar.navbar-default a:link, #masthead_controls .navbar.navbar-default a:visited, #masthead_controls .navbar.navbar-default a:hover,
+#masthead_controls .navbar.navbar-default a:focus, #masthead_controls .navbar.navbar-default a:active{background: #fff; color: $crimson;font-size:18px;}
+
+#masthead_controls .navbar.navbar-default .nav.navbar-nav a:hover, a:link, a:visited, a:active{color: $midnight}
+a:hover{color: $crimson}
+
+
+
+.catalog li{border-bottom: 2px solid $default; margin: 0 0 1em;padding-bottom: 1em;  box-sizing: border-box;}
+.catalog li table{  box-sizing: border-box; width: 99%;}
+
+.catalog li h2{margin: -1em 0 1em;; line-height: 1em; padding:0 1em 0 1em;; font-size: 1.5em; width: 99%;}
+
+
+
+/* f00ter */
+#footer{margin: 0;}
+#footer .tagline{font-size: 1.75em;padding-top: 8px;padding-bottom: 8px;}
+#footer .tagline span {font-size: .55em;}
+
+.bottom-nav, .row.bottom-nav {
+  background: $mahogany; color: #fff;
+  margin: 0;
+}
+
+
+#bottom-nav-columns a, #bottom-nav-columns a:visited, #bottom-nav-columns a:active{color: #fff;}
+
+
+
+#bottom-nav-columns {
+  display: flex;
+  justify-content: space-around;
+  margin: 5em auto;
+  padding: 0;
+  max-width: 1200px;
+  box-sizing: border-box;
+}
+
+
+#bottom-nav-columns ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  flex-flow: row ;
+
+}
+
+#bottom-nav-columns ul li {
+  margin: 1em; max-width: 25%;
+
+}
+#bottom-nav-columns ul li img{float: left;padding: 0 5px;}
+
+
+.copyright { width: 100%;}
+.copyright .copy{float: left; }
+.copy img{max-width: 30px; height: auto;width: 100%;}
+
+@media (max-width: 768px) {
+  #masthead_controls .navbar.navbar-default .navbar-nav{ margin: 0;}
+  .catalog{margin: 0; padding: 0;}
+  .catalog li{}
+}
+
+@media (max-width: 1024px) {
+  #masthead .container-fluid .bg-hdr{margin-top: 30px;}
+  #bottom-nav-columns ul {
+
+    flex-flow: column ;
+
+  }
+
+  #bottom-nav-columns ul li{width: 90%; max-width: 90%;}
+
+
+  #footer .copyright { width: 100%; text-align: left; float: left;}
+  #footer .copyright .copy{float: left; width: 100%;}
+
+
+
+}

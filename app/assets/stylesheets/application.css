@@ -15,3 +15,15 @@
  *= require_self
  *= require custom_layout/tweaks
  */
+
+/* overwrite background image on home page! */
+
+#masthead, #masthead .container-fluid, #masthead .container-fluid  .navbar-header{
+    min-width:99.95%;width:100%;margin:0;padding:0;
+    background: #fff; border: none;
+}
+
+
+#masthead .container-fluid.bg-hdr h1{
+    margin-left:15px;
+}

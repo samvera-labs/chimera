@@ -1,23 +1,14 @@
-<footer class="footer footer--dark ">
-  <div class="footer-container container footer-text--light">
-    <div class="col-xs-12">
-        <ul class="col-sm-4">
-        <li><a href="<%= hyrax.help_path('help') %>">Help</a></li>
-          <li><a href="<%= hyrax.root_path %>" class="footer-link">Home</a></li>
-          <li><a href="<%= hyrax.agreement_path('agreement')  %> " class="footer-link">Policy &amp; Terms of Use</a></li>
-        </ul>
-        <ul class="col-sm-8 text-right">
-          <li class="footer-right">Questions? Contact us <%= render partial: '/contact_us' %></li>
-        </ul>
-      </div>
+<!-- footer --><!-- footer --><!-- footer --><!-- footer -->
+<footer id="footer" role="contentinfo" itemscope="itemscope" itemtype="http://schema.org/CollegeOrUniversity">
+  <div class="row pad">
+    <p class="tagline">Fulfilling <span>the</span> Promise</p>
+    <p class="signature">
+      <a href="https://www.iu.edu" class="signature-link">Indiana University</a>
+    </p>
+    <p class="copyright">
+          <span class="copy"><img src="//assets.iu.edu/brand/2.x/trident-small.png" alt="Indiana University">
+        <a href="https://www.iu.edu/copyright/index.html">Copyright</a> &#169; <%= Time.current.year %> <span class="line-break-small">The Trustees of <a href="https://www.iu.edu/" itemprop="url"><span itemprop="name">Indiana University</span></a></span></span>
+      <span class="line-break"><a href="/privacy" id="privacy-policy-link">Privacy Notice</a> | <a href="https://accessibility.iu.edu" id="accessibility-link" title="Having trouble accessing this web page because of a disability? Visit this page for assistance.">Accessibility</a></span>
+    </p>
   </div>
 </footer>
-
-<div class="footer-subfooter footer--light">
-   <div class="footer-container container">
-      <div class="col-xs-12">
-      <p class="col-sm-6">© 2018 Regents of the University of Michigan</p>
-      <p class="col-sm-6 col-md-6 align-right">Powered by Samvera</p>
-    </div>
-   </div>
-</div>
