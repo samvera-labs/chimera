@@ -1,3 +1,6 @@
+# minimum gem update:
+# bundle update --source name_of_gem
+
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
@@ -34,6 +37,9 @@ gem 'resque'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 
+# EZID client from Duke
+gem 'ezid-client'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -48,8 +54,15 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Pinning Rack commit that resolves the large file upload issue
+# When 2.0.4 is out this might not be needed anymore
+# See: https://tools.lib.umich.edu/jira/browse/DBD-920
+#      https://tools.lib.umich.edu/jira/browse/HELIO-1450
+# gem 'rack', git: 'https://github.com/rack/rack.git', ref: 'ee01748'
+
 # Begin security vulnerability mitigation
 gem 'loofah', '~> 2.2.3'
+gem 'rack', '~> 2.0.6'
 gem 'rubyzip', '~> 1.2.2'
 gem 'sinatra', '~> 2.0.2'
 gem 'sprockets', '~> 3.7.2'
@@ -78,11 +91,6 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-group :development, :test do
-  # gem 'solr_wrapper', '>= 0.3'
-  gem 'solr_wrapper', '~> 2.0.0'
-end
-
 gem 'devise'
 gem 'devise-guests', '~> 0.6'
 gem 'rsolr', '>= 1.0'
@@ -102,6 +110,7 @@ group :development, :test do
   gem 'rspec-retry'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1'
+  gem 'solr_wrapper', '~> 2.1.0'
 end
 
 group :development do

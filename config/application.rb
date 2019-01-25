@@ -2,11 +2,13 @@
 
 require_relative 'boot'
 require 'rails/all'
+# require_relative '../lib/rack_multipart_buf_size_setter.rb'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# rubocop:disable Rails/Output
 module DeepBlueDocs
 
   class Application < Rails::Application
@@ -18,8 +20,29 @@ module DeepBlueDocs
       g.test_framework :rspec, spec: true
     end
 
+    # config.middleware.insert_before Rack::Runtime, RackMultipartBufSizeSetter
+
     # config.dbd_version = 'DBDv1'
     config.dbd_version = 'DBDv2'
+
+    ## ensure tmp directories are defined
+    verbose_init = false
+    puts "ENV['TMPDIR']=#{ENV['TMPDIR']}" if verbose_init
+    puts "ENV['_JAVA_OPTIONS']=#{ENV['_JAVA_OPTIONS']}" if verbose_init
+    puts "ENV['JAVA_OPTIONS']=#{ENV['JAVA_OPTIONS']}" if verbose_init
+    tmpdir = ENV['TMPDIR']
+    if tmpdir.blank? || tmpdir == '/tmp' || tmpdir.start_with?( '/tmp/' )
+      tmpdir = File.absolute_path( './tmp/derivatives/' )
+      ENV['TMPDIR'] = tmpdir
+    end
+    ENV['_JAVA_OPTIONS'] = "-Djava.io.tmpdir=#{tmpdir}" if ENV['_JAVA_OPTIONS'].blank?
+    ENV['JAVA_OPTIONS'] = "-Djava.io.tmpdir=#{tmpdir}" if ENV['JAVA_OPTIONS'].blank?
+    puts "ENV['TMPDIR']=#{ENV['TMPDIR']}"
+    puts "ENV['_JAVA_OPTIONS']=#{ENV['_JAVA_OPTIONS']}" if verbose_init
+    puts "ENV['JAVA_OPTIONS']=#{ENV['JAVA_OPTIONS']}" if verbose_init
+    puts `echo $TMPDIR`.to_s if verbose_init
+    puts `echo $_JAVA_OPTIONS`.to_s if verbose_init
+    puts `echo $JAVA_OPTIONS`.to_s if verbose_init
 
     ## configure box
 
@@ -56,7 +79,7 @@ module DeepBlueDocs
     end
     config.globus_enabled = true && Dir.exist?( config.globus_download_dir ) && Dir.exist?( config.globus_prep_dir )
     config.base_file_name = "DeepBlueData_"
-    config.globus_base_url = 'https://www.globus.org/app/transfer?origin_id=99d8c648-a9ff-11e7-aedd-22000a92523b&origin_path=%2Fdownload%2F'
+    config.globus_base_url = 'https://app.globus.org/file-manager?origin_id=99d8c648-a9ff-11e7-aedd-22000a92523b&origin_path=%2Fdownload%2F'
     config.globus_restart_all_copy_jobs_quiet = true
     config.globus_debug_delay_per_file_copy_job_seconds = 0
     config.globus_after_copy_job_ui_delay_seconds = 3
@@ -78,12 +101,25 @@ module DeepBlueDocs
     config.characterize_excluded_ext_set = { '.csv' => 'text/plain' }.freeze # , '.nc' => 'text/plain' }.freeze
     config.characterize_enforced_mime_type = { '.csv' => 'text/csv' }.freeze # , '.nc' => 'text/plain' }.freeze
 
+
+    # URL for logging the user out of Cosign
+    config.logout_prefix = "https://weblogin.umich.edu/cgi-bin/logout?"
+
     # ingest derivative config
     config.derivative_excluded_ext_set = {}.freeze
     config.derivative_max_file_size = 4_000_000_000 # set to -1 for no limit
     config.derivative_max_file_size_str = ActiveSupport::NumberHelper::NumberToHumanSizeConverter.convert(config.derivative_max_file_size, precision: 3 )
 
     config.relative_url_root = '/data' unless Rails.env.test?
+
+    # For properly generating URLs and minting DOIs - the app may not by default
+    # Outside of a request context the hostname needs to be provided.
+    config.hostname = ENV['UMRDR_HOST'] || Settings.umrdr_host
+
+    # Set the default host for resolving _url methods
+    Rails.application.routes.default_url_options[:host] = config.hostname
+
+
 
     # ingest virus scan config
     config.virus_scan_max_file_size = 4_000_000_000
@@ -104,3 +140,4 @@ module DeepBlueDocs
   end
 
 end
+# rubocop:enable Rails/Output

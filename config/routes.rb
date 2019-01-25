@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 
   mount Blacklight::Engine => '/'
 
+  get '/concern/generic_works/*rest', to: redirect( '/data/concern/data_sets/%{rest}', status: 302 )
+
   get ':action' => 'hyrax/static#:action', constraints: { action: %r{
                                                                       about|
                                                                       agreement|
@@ -41,7 +43,11 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users
+  devise_for :users, path: '', path_names: {sign_in: 'login', sign_out: 'logout'}, controllers: {sessions: 'sessions'} 
+  get '/logout_now', to: 'sessions#logout_now'
+
+
+  #devise_for :users
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   resources :welcome, only: 'index'
@@ -53,6 +59,7 @@ Rails.application.routes.draw do
     resources :data_sets do
       member do
         # post   'confirm'
+        get    'display_provenance_log'
         get    'doi'
         post   'globus_download'
         post   'globus_add_email'

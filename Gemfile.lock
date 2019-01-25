@@ -228,6 +228,9 @@ GEM
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
     execjs (2.7.0)
+    ezid-client (1.8.0)
+      hashie (~> 3.4, >= 3.4.3)
+      nokogiri
     factory_bot (4.11.1)
       activesupport (>= 3.0.0)
     faraday (0.12.2)
@@ -271,6 +274,7 @@ GEM
       tilt
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
+    hashie (3.6.0)
     hiredis (0.6.1)
     htmlentities (4.3.4)
     http_logger (0.5.1)
@@ -541,7 +545,7 @@ GEM
       nokogiri (~> 1.6)
       rails (~> 5.0)
       rdf
-    rack (2.0.5)
+    rack (2.0.6)
     rack-protection (2.0.4)
       rack
     rack-test (0.6.3)
@@ -758,7 +762,7 @@ GEM
       rack-protection (= 2.0.4)
       tilt (~> 2.0)
     slop (4.6.2)
-    solr_wrapper (2.0.0)
+    solr_wrapper (2.1.0)
       faraday
       retriable
       ruby-progressbar
@@ -855,6 +859,7 @@ DEPENDENCIES
   devise-guests (~> 0.6)
   down (~> 4.4)
   edtf
+  ezid-client
   factory_bot
   fcrepo_wrapper
   hyrax (= 2.2.4)
@@ -868,6 +873,7 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma (~> 3.0)
+  rack (~> 2.0.6)
   rails (~> 5.0.6)
   rails-controller-testing
   resque
@@ -886,7 +892,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers (~> 3.1)
   sinatra (~> 2.0.2)
-  solr_wrapper (~> 2.0.0)
+  solr_wrapper (~> 2.1.0)
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets (~> 3.7.2)

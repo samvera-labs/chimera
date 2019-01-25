@@ -4,7 +4,7 @@ Hyrax.config do |config|
 
   config.register_curation_concern :data_set
   config.register_curation_concern :dissertation
-  config.register_curation_concern :generic_work
+  # config.register_curation_concern :generic_work
 
   # Register roles that are expected by your implementation.
   # @see Hyrax::RoleRegistry for additional details.
@@ -42,7 +42,7 @@ Hyrax.config do |config|
   # config.max_days_between_fixity_checks = 7
 
   # Options to control the file uploader
-  # Run `bundle rake tmp:cache:clear` to clear all the contents of public/assets
+  # Run `bundle exec rake tmp:cache:clear` to clear all the contents of public/assets
   # Run `bundle exec rake assets:clobber assets:precompile` in dev for this to take effect
   config.uploader = {
     limitConcurrentUploads: 6,
