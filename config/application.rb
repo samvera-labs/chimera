@@ -16,6 +16,11 @@ module DeepBlueDocs
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Chimera configuration goes here
+    # config.authentication_method = "generic"
+    # config.authentication_method = "iu"
+    config.authentication_method = "umich"
+
     config.generators do |g|
       g.test_framework :rspec, spec: true
     end

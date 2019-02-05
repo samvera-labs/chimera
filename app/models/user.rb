@@ -18,7 +18,9 @@ class User < ApplicationRecord
                     strategy: true,
                     controller: :sessions,
                     model: 'devise/models/http_header_authenticatable')
-  devise :http_header_authenticatable
+  if Rails.configuration.authentication_method == "umich"
+    devise :http_header_authenticatable
+  end
 
   if Blacklight::Utils.needs_attr_accessible?
     attr_accessible :email, :password, :password_confirmation

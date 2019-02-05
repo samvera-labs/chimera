@@ -43,7 +43,13 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users, path: '', path_names: {sign_in: 'login', sign_out: 'logout'}, controllers: {sessions: 'sessions'} 
+
+  if Rails.configuration.authentication_method == "umich"
+    devise_for :users, path: '', path_names: {sign_in: 'login', sign_out: 'logout'}, controllers: {sessions: 'sessions'}
+  else
+    devise_for :users
+  end
+
   get '/logout_now', to: 'sessions#logout_now'
 
 
