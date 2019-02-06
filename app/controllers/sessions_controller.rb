@@ -1,3 +1,4 @@
+# this class is specific to UMich authentication only
 class SessionsController < ApplicationController
    def destroy
      if user_signed_in?
