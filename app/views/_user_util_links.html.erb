@@ -1,13 +1,10 @@
 <ul id="user_utility_links" class="nav navbar-nav navbar-right">
       <!-- About, Help, Contact Us -->
-        <li <%= 'class=active' if current_page?(hyrax.about_path) %>>
-          <%= link_to t(:'hyrax.controls.about'), hyrax.about_path, aria: current_page?(hyrax.about_path) ? {current: 'page'} : nil %></li>
         <li <%= 'class=active' if current_page?(hyrax.help_path) %>>
           <%= link_to t(:'hyrax.controls.help'), hyrax.help_path, aria: current_page?(hyrax.help_path) ? {current: 'page'} : nil %></li>
-        <li <%= 'class=active' if current_page?(hyrax.contact_path) %>>
-          <%= link_to t(:'hyrax.controls.contact'), hyrax.contact_path, aria: current_page?(hyrax.contact_path) ? {current: 'page'} : nil %></li>
+        <li><a href="mailto:jhallida@indiana.edu">Tech Support</a></li>
     <!-- End About, Help, Contact Us -->
-  
+
   <%= render 'shared/locale_picker' if available_translations.size > 1 %>
   <% if user_signed_in? %>
     <li>

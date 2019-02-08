@@ -20,8 +20,7 @@ en:
 
   homepage:
     marketing_blurb: >
-      Deep Blue Data is a repository offered by the University of Michigan Library that provides access and preservation
-      services for digital research data that were developed or used in the support of research activities at U-M.
+      Chimera is an experimental data repository, based on Deep Blue Data from the University of Michigan.
 
   contact:
     by_email:        "by email"
@@ -30,7 +29,7 @@ en:
     email_us:        "Email Us"
 
   email:
-    deepblue:        "deepblue@umich.edu"
+    deepblue:        "jhallida@indiana.edu"
 
   generic_work:
     doi_already_exists:
@@ -65,7 +64,7 @@ en:
     make_your_work_citable:
       "Make your work citable!"
     thank_you_for_depositing_your_work:
-      "Thank You for Your Deposit in Deep Blue Data!"
+      "Thank You for Your Deposit in Chimera!"
     your_work_will_remain_private_until: >
       Your work will remain private until Research Data Services has reviewed your submission.
       You will be notified once your data set is published.
