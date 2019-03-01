@@ -180,11 +180,14 @@ module Deepblue
 
       def add_file_set_to_work( work:, file_set: )
         return if file_set.parent.present? && work.id == file_set.parent_id
+        # TODO: probably should lock the work here.
+        work.reload
         work.ordered_members << file_set
         log_provenance_add_child( parent: work, child: file_set )
         work.total_file_size_add_file_set file_set
         work.representative = file_set if work.representative_id.blank?
         work.thumbnail = file_set if work.thumbnail_id.blank?
+        work.save!
       end
 
       def add_file_sets_to_work( work_hash:, work: )
@@ -226,6 +229,7 @@ module Deepblue
                                                file_size: file_size,
                                                build_mode: mode )
           add_file_set_to_work( work: work, file_set: file_set )
+          # TODO: move ingest step here, this will probably fix file_sets that turn up with missing file sizes
         end
         work.save!
         work.reload
@@ -255,6 +259,7 @@ module Deepblue
                                file_set_count: count,
                                file_size: file_size )
           add_file_set_to_work( work: work, file_set: fs )
+          # TODO: move ingest step here, this will probably fix file_sets that turn up with missing file sizes
         end
         work.save!
         work.reload
@@ -348,6 +353,9 @@ module Deepblue
         begin
           admin_set = AdminSet.find( admin_set_id )
         rescue ActiveFedora::ObjectNotFoundError
+          # TODO: Log this
+          admin_set = admin_set_work
+        rescue Ldp::Gone
           # TODO: Log this
           admin_set = admin_set_work
         end
@@ -487,7 +495,12 @@ module Deepblue
         # puts "id=#{id} path=#{path} filename=#{filename} file_ids=#{file_ids}"
         log_msg( "#{mode}: building file #{file_set_of} of #{file_set_count}#{file_size}" ) if @verbose
         fname = filename || File.basename( path )
-        file_set = build_file_set_new( id: id, depositor: work.depositor, path: path, original_name: fname, build_mode: mode )
+        file_set = build_file_set_new( id: id,
+                                       depositor: work.depositor,
+                                       path: path,
+                                       original_name: fname,
+                                       build_mode: mode,
+                                       current_user: user_key )
         file_set.title = Array( fname )
         file_set.label = fname
         now = DateTime.now.new_offset( 0 )
@@ -497,7 +510,12 @@ module Deepblue
         file_set.depositor = work.depositor
         file_set.prior_identifier = file_ids if file_ids.present?
         file_set.save!
-        return build_file_set_ingest( file_set: file_set, path: path, checksum_algorithm: nil, checksum_value: nil, build_mode: mode )
+        # TODO: move ingest step to after attach to work, this will probably fix file_sets that turn up with missing file sizes
+        return build_file_set_ingest( file_set: file_set,
+                                      path: path,
+                                      checksum_algorithm: nil,
+                                      checksum_value: nil,
+                                      build_mode: mode )
       end
 
       def build_file_set_from_hash( id:,
@@ -527,7 +545,8 @@ module Deepblue
                                        depositor: depositor,
                                        path: path,
                                        original_name: original_name,
-                                       build_mode: build_mode )
+                                       build_mode: build_mode,
+                                       current_user: user_key )
 
         curation_notes_admin = Array( file_set_hash[:curation_notes_admin] )
         curation_notes_user = Array( file_set_hash[:curation_notes_user] )
@@ -554,6 +573,7 @@ module Deepblue
         update_visibility( curation_concern: file_set, visibility: visibility )
         file_set.save!
 
+        # TODO: move ingest step to after attach to work, this will probably fix file_sets that turn up with missing file sizes
         return build_file_set_ingest( file_set: file_set,
                                       path: path,
                                       checksum_algorithm: checksum_algorithm,
@@ -611,28 +631,20 @@ module Deepblue
         return file_set
       end
 
-      def build_file_set_new( id:, depositor:, path:, original_name:, build_mode: )
+      def build_file_set_new( id:, depositor:, path:, original_name:, build_mode:, current_user: )
         log_msg( "#{build_mode}: processing: #{path}" )
         file = File.open( path )
         # fix so that filename comes from the name of the file and not the hash
         file.define_singleton_method( :original_name ) do
           original_name
         end
+        file.define_singleton_method( :current_user ) do
+          current_user
+        end
         id_new = MODE_MIGRATE == build_mode ? id : nil
         file_set = new_file_set( id: id_new )
         file_set.apply_depositor_metadata( depositor )
         upload_file_to_file_set( file_set, file )
-        # attempts = 0
-        # file_set = nil
-        # loop do
-        #   break if attempts > 6
-        #   file_set = new_file_set( id: id_new )
-        #   file_set.apply_depositor_metadata( depositor )
-        #   success = upload_file_to_file_set( file_set, file )
-        #   break if success
-        #   attempts += 1
-        #   file_set = nil
-        # end
         return file_set
       end
 
@@ -1945,6 +1957,7 @@ module Deepblue
                                                  file_size: file_size,
                                                  build_mode: update_build_mode )
             add_file_set_to_work( work: work, file_set: file_set )
+            # TODO: move ingest step here, this will probably fix file_sets that turn up with missing file sizes
             updates << "#{attr_prefix work}: file added #{file_set_id}"
           end
         end

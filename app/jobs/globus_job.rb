@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GlobusJob < ApplicationJob
+class GlobusJob < ::Hyrax::ApplicationJob
 
   @@globus_era_timestamp = DeepBlueDocs::Application.config.globus_era_timestamp
   @@globus_era_token = DeepBlueDocs::Application.config.globus_era_token.freeze
@@ -10,6 +10,9 @@ class GlobusJob < ApplicationJob
   @@globus_base_url = DeepBlueDocs::Application.config.globus_base_url.freeze
   @@globus_download_dir = DeepBlueDocs::Application.config.globus_download_dir.freeze
   @@globus_prep_dir = DeepBlueDocs::Application.config.globus_prep_dir.freeze
+
+  @@globus_copy_file_group = DeepBlueDocs::Application.config.globus_copy_file_group.freeze
+  @@globus_copy_file_permissions = DeepBlueDocs::Application.config.globus_copy_file_permissions.freeze
 
   def self.files_available?( concern_id )
     copy_complete? concern_id
