@@ -4,18 +4,34 @@ module Deepblue
 
   module IngestHelper
 
+    INGEST_HELPER_VERBOSE = true
+
     # @param [FileSet] file_set
     # @param [String] repository_file_id identifier for a Hydra::PCDM::File
     # @param [String, NilClass] file_path the cached file within the Hyrax.config.working_path
     def self.characterize( file_set,
                            repository_file_id,
                            file_path = nil,
-                           delete_input_file: true,
                            continue_job_chain: true,
                            continue_job_chain_later: true,
                            current_user: IngestHelper.current_user,
+                           delete_input_file: true,
+                           uploaded_file_ids: [],
                            **added_prov_key_values )
 
+      Deepblue::LoggingHelper.bold_debug [ Deepblue::LoggingHelper.here,
+                                           Deepblue::LoggingHelper.called_from,
+                                           "file_set=#{file_set}",
+                                           "repository_file_id=#{repository_file_id}",
+                                           "file_path=#{file_path}",
+                                           "continue_job_chain=#{continue_job_chain}",
+                                           "continue_job_chain_later=#{continue_job_chain_later}",
+                                           "current_user=#{current_user}",
+                                           "delete_input_file=#{delete_input_file}",
+                                           "uploaded_file_ids=#{uploaded_file_ids}",
+                                           "added_prov_key_values=#{added_prov_key_values}",
+                                           # "wrapper.methods=#{wrapper.methods.sort}",
+                                           "" ] if INGEST_HELPER_VERBOSE
       # See Hyrax gem: app/job/characterize_job.rb
       file_name = Hyrax::WorkingDirectory.find_or_retrieve( repository_file_id, file_set.id, file_path )
       # file_ext = File.extname file_set.label
@@ -60,9 +76,11 @@ module Deepblue
                                         repository_file_id,
                                         file_name,
                                         file_path,
-                                        delete_input_file: delete_input_file,
                                         continue_job_chain: continue_job_chain,
                                         continue_job_chain_later: continue_job_chain_later,
+                                        current_user: current_user,
+                                        delete_input_file: delete_input_file,
+                                        uploaded_file_ids: uploaded_file_ids,
                                         **added_prov_key_values )
       end
     end
@@ -73,10 +91,22 @@ module Deepblue
     def self.create_derivatives( file_set,
                                  repository_file_id,
                                  file_path = nil,
-                                 delete_input_file: true,
                                  current_user: IngestHelper.current_user,
+                                 delete_input_file: true,
+                                 uploaded_file_ids: [],
                                  **added_prov_key_values )
 
+      Deepblue::LoggingHelper.bold_debug [ Deepblue::LoggingHelper.here,
+                                           Deepblue::LoggingHelper.called_from,
+                                           "file_set=#{file_set}",
+                                           "repository_file_id=#{repository_file_id}",
+                                           "file_path=#{file_path}",
+                                           "current_user=#{current_user}",
+                                           "delete_input_file=#{delete_input_file}",
+                                           "uploaded_file_ids=#{uploaded_file_ids}",
+                                           "added_prov_key_values=#{added_prov_key_values}",
+                                           # "wrapper.methods=#{wrapper.methods.sort}",
+                                           "" ] if INGEST_HELPER_VERBOSE
       # See Hyrax gem: app/job/create_derivatives_job.rb
       file_name = Hyrax::WorkingDirectory.find_or_retrieve( repository_file_id, file_set.id, file_path )
       Rails.logger.warn "Create derivatives for: #{file_name}."
@@ -145,15 +175,24 @@ module Deepblue
     # @option opts [String] mime_type
     # @option opts [String] filename
     # @option opts [String] relation, ex. :original_file
-    def self.ingest( file_set, path, _user, _opts = {} )
+    def self.ingest( file_set, path, _user, uploaded_file_ids = [], _opts = {} )
+      Deepblue::LoggingHelper.bold_debug [ Deepblue::LoggingHelper.here,
+                                           Deepblue::LoggingHelper.called_from,
+                                           "file_set=#{file_set}",
+                                           "path=#{path}",
+                                           "uploaded_file_ids=#{uploaded_file_ids}",
+                                           "user=#{_user}",
+                                           "opts=#{opts}",
+                                           # "wrapper.methods=#{wrapper.methods.sort}",
+                                           "" ] if INGEST_HELPER_VERBOSE
       # launched from Hyrax gem: app/actors/hyrax/actors/file_set_actor.rb  FileSetActor#create_content
       # See Hyrax gem: app/job/ingest_local_file_job.rb
       # def perform(file_set, path, user)
       file_set.label ||= File.basename(path)
-      file_set_actor_create_content( file_set, File.open(path) )
+      file_set_actor_create_content( file_set, File.open(path), uploaded_file_ids: uploaded_file_ids )
     end
 
-    def self.file_set_actor_create_content( file_set, file, relation = :original_file )
+    def self.file_set_actor_create_content( file_set, file, relation = :original_file, uploaded_file_ids: [] )
       # If the file set doesn't have a title or label assigned, set a default.
       file_set.label ||= label_for( file )
       file_set.title = [file_set.label] if file_set.title.blank?
@@ -171,7 +210,7 @@ module Deepblue
       # else
       #   IngestJob.perform_later(wrapper!(file: file, relation: relation))
       # end
-      io = JobIoWrapper.create_with_varied_file_handling!(user: user, file: file, relation: relation, file_set: file_set)
+      io = JobIoWrapper.create_with_varied_file_handling!( user: user, file: file, relation: relation, file_set: file_set )
       # FileActor#ingest_file(io)
       # def ingest_file(io)
       # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
@@ -192,7 +231,7 @@ module Deepblue
     # If the file was imported via URL, parse the original filename.
     # If all else fails, use the basename of the file where it sits.
     # @note This is only useful for labeling the file_set, because of the recourse to import_url
-    def self.label_for(file)
+    def self.label_for( file )
       if file.is_a?(Hyrax::UploadedFile) # filename not present for uncached remote file!
         file.uploader.filename.present? ? file.uploader.filename : File.basename(Addressable::URI.parse(file.file_url).path)
       elsif file.respond_to?(:original_name) # e.g. Hydra::Derivatives::IoDecorator
@@ -220,22 +259,49 @@ module Deepblue
                                              repository_file_id,
                                              file_name,
                                              file_path,
-                                             delete_input_file: true,
                                              continue_job_chain: true,
                                              continue_job_chain_later: true,
                                              current_user: IngestHelper.current_user,
+                                             delete_input_file: true,
+                                             uploaded_file_ids: [],
                                              **added_prov_key_values )
+
+      Deepblue::LoggingHelper.bold_debug [ Deepblue::LoggingHelper.here,
+                                           Deepblue::LoggingHelper.called_from,
+                                           "file_set=#{file_set}",
+                                           "repository_file_id=#{repository_file_id}",
+                                           "file_name=#{file_name}",
+                                           "file_path=#{file_path}",
+                                           "continue_job_chain=#{continue_job_chain}",
+                                           "continue_job_chain_later=#{continue_job_chain_later}",
+                                           "current_user=#{current_user}",
+                                           "delete_input_file=#{delete_input_file}",
+                                           "uploaded_file_ids=#{uploaded_file_ids}",
+                                           "added_prov_key_values=#{added_prov_key_values}",
+                                           # "wrapper.methods=#{wrapper.methods.sort}",
+                                           "" ] if INGEST_HELPER_VERBOSE
       if continue_job_chain
         if continue_job_chain_later
           # TODO: see about adding **added_prov_key_values to this:
-          CreateDerivativesJob.perform_later( file_set, repository_file_id, file_name, delete_input_file )
+          CreateDerivativesJob.perform_later( file_set,
+                                              repository_file_id,
+                                              file_name,
+                                              current_user: current_user,
+                                              delete_input_file: delete_input_file,
+                                              uploaded_file_ids: uploaded_file_ids )
         else
-          # CreateDerivativesJob.perform_now( file_set, repository_file_id, file_name, delete_input_file )
+          # CreateDerivativesJob.perform_now( file_set,
+          #                                   repository_file_id,
+          #                                   file_name,
+          #                                   current_user: current_user,
+          #                                   delete_input_file: delete_input_file,
+          #                                   uploaded_file_ids: uploaded_file_ids )
           create_derivatives( file_set,
                               repository_file_id,
                               file_name,
                               delete_input_file: delete_input_file,
                               current_user: current_user,
+                              uploaded_file_ids: uploaded_file_ids,
                               **added_prov_key_values )
         end
       else
@@ -244,6 +310,12 @@ module Deepblue
     end
 
     def self.update_total_file_size( file_set, log_prefix: nil )
+      Deepblue::LoggingHelper.bold_debug [ Deepblue::LoggingHelper.here,
+                                           Deepblue::LoggingHelper.called_from,
+                                           "file_set=#{file_set}",
+                                           "log_prefix=#{log_prefix}",
+                                           # "wrapper.methods=#{wrapper.methods.sort}",
+                                           "" ] if INGEST_HELPER_VERBOSE
       # Rails.logger.info "begin IngestHelper.update_total_file_size"
       # Rails.logger.debug "#{log_prefix} file_set.orginal_file.size=#{file_set.original_file.size}" unless log_prefix.nil?
       # Rails.logger.info "nothing to update, parent is nil" if file_set.parent.nil?
