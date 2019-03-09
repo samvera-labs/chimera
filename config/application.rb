@@ -143,7 +143,7 @@ module DeepBlueDocs
 
     # For properly generating URLs and minting DOIs - the app may not by default
     # Outside of a request context the hostname needs to be provided.
-    config.hostname = ENV['UMRDR_HOST'] || Settings.umrdr_host
+    config.hostname = ENV['APP_HOSTNAME'] || Settings.hostname
 
     # Set the default host for resolving _url methods
     Rails.application.routes.default_url_options[:host] = config.hostname
