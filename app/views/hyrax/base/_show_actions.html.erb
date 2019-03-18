@@ -11,7 +11,8 @@
     <% end %>
 
     <% if Hyrax.config.download_files %>
-      <% if @presenter.zip_download_enabled? && @presenter.solr_document.visibility != "embargo" %>
+      <% admin_or_not_embargo = ( @presenter.current_ability.admin? || @presenter.solr_document.visibility != "embargo" ) %>
+      <% if @presenter.zip_download_enabled? && admin_or_not_embargo %>
         <%= form_tag( main_app.zip_download_hyrax_data_set_path( @presenter.id ), method: 'post' ) do %>
           <%= hidden_field_tag('data_set[nop]') %>
           <% if DeepBlueDocs::Application.config.max_work_file_size_to_download < @presenter.total_file_size %>
@@ -22,7 +23,7 @@
             <%= submit_tag( @presenter.label_with_total_file_size( t('simple_form.actions.data_set.zip_download') ),
                             class: 'btn btn-primary') %>
             <% if DeepBlueDocs::Application.config.min_work_file_size_to_download_warn < @presenter.total_file_size %>
-              <p><%= t('simple_form.hints.data_set.download_total_work_size_too_large',
+              <p><%= t('simple_form.hints.data_set.download_total_work_size_may_be_too_large',
                        total_file_size: @presenter.total_file_size_human_readable ) %>
               </p> 
             <% else %>
@@ -31,7 +32,7 @@
           <% end %>
         <% end %>
       <% end %>
-      <% if @presenter.respond_to?( 'globus_enabled?' ) && @presenter.globus_enabled? && @presenter.solr_document.visibility != "embargo" %>
+      <% if @presenter.respond_to?( 'globus_enabled?' ) && @presenter.globus_enabled? && admin_or_not_embargo %>
         <%= form_tag( main_app.globus_download_hyrax_data_set_path(@presenter.id), method: 'post' ) do %>
           <%= hidden_field_tag('data_set[nop]') %>
            <% if @presenter.globus_files_available? %>

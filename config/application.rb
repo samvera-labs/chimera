@@ -88,6 +88,12 @@ module DeepBlueDocs
     config.globus_restart_all_copy_jobs_quiet = true
     config.globus_debug_delay_per_file_copy_job_seconds = 0
     config.globus_after_copy_job_ui_delay_seconds = 3
+    if Rails.env.production?
+      config.globus_copy_file_group = "dbdglobus"
+    else
+      config.globus_copy_file_group = nil
+    end
+    config.globus_copy_file_permissions = "u=rw,g=rw,o=r"
 
     # deposit notification email addresses
     config.notification_email = Settings.notification_email
@@ -102,18 +108,22 @@ module DeepBlueDocs
     config.max_work_file_size_to_download = 10_000_000_000
     config.min_work_file_size_to_download_warn = 1_000_000_000
 
+    ### file upload and ingest
+    config.notify_user_file_upload_and_ingest_are_complete = true
+    config.notify_managers_file_upload_and_ingest_are_complete = true
+
     # ingest characterization config
     config.characterize_excluded_ext_set = { '.csv' => 'text/plain' }.freeze # , '.nc' => 'text/plain' }.freeze
     config.characterize_enforced_mime_type = { '.csv' => 'text/csv' }.freeze # , '.nc' => 'text/plain' }.freeze
-
-
-    # URL for logging the user out of Cosign
-    config.logout_prefix = "https://weblogin.umich.edu/cgi-bin/logout?"
 
     # ingest derivative config
     config.derivative_excluded_ext_set = {}.freeze
     config.derivative_max_file_size = 4_000_000_000 # set to -1 for no limit
     config.derivative_max_file_size_str = ActiveSupport::NumberHelper::NumberToHumanSizeConverter.convert(config.derivative_max_file_size, precision: 3 )
+
+
+    # URL for logging the user out of Cosign
+    config.logout_prefix = "https://weblogin.umich.edu/cgi-bin/logout?"
 
     config.relative_url_root = '/data' unless Rails.env.test?
 
@@ -141,6 +151,8 @@ module DeepBlueDocs
 
     config.provenance_log_echo_to_rails_logger = true
     config.provenance_log_redundant_events = true
+
+    config.upload_log_echo_to_rails_logger = true
 
   end
 
