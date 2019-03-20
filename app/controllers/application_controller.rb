@@ -14,7 +14,9 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception
 
-  before_action :clear_session_user
+  if Rails.configuration.authentication_method == "umich"
+    before_action :clear_session_user
+  end
 
   # From PSU's ScholarSphere
   # Clears any user session and authorization information by:

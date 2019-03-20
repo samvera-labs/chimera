@@ -26,12 +26,23 @@
 
         <li class="divider"></li>
         <li><%= link_to t("hyrax.toolbar.profile.logout"), main_app.destroy_user_session_path %></li>
+
+        <% if Rails.configuration.authentication_method == "iu" %>
+          <li><%= link_to 'CAS Log Out', main_app.destroy_global_session_path, class: 'log-out', role: 'menuitem' %></li>
+        <% end %>
+
       </ul>
     </li><!-- /.btn-group -->
   <% else %>
     <li>
-      <%= link_to main_app.new_user_session_path do %>
-        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> <%= t("hyrax.toolbar.profile.login") %>
+      <% if Rails.configuration.authentication_method == "iu" %>
+        <%= link_to main_app.new_user_session_path do %>
+          <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login To CAS
+        <% end %>
+      <% else %>
+        <%= link_to main_app.new_user_session_path do %>
+          <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> <%= t("hyrax.toolbar.profile.login") %>
+        <% end %>
       <% end %>
     </li>
   <% end %>
