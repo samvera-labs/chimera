@@ -32,11 +32,10 @@ def load_yml
 end
 
 Ezid::Client.configure do |config|
-  yml_cfg = load_yml
-  config.host = yml_cfg[:host] || "localhost"
-  config.port = yml_cfg[:port] || 8443
-  # config.use_ssl  = yml_cfg[:use_ssl] || true
-  config.user     = yml_cfg[:user] || "eziduser"
-  config.password = yml_cfg[:password] || "ezidpass"
-  config.default_shoulder = yml_cfg[:shoulder] || "ark:/99999/"
+  config.host     = ENV['EZID_HOST'] || Settings.ezid.host
+  config.port     = ENV['EZID_PORT'] || Settings.ezid.port
+  config.user     = ENV['EZID_USER'] || Settings.ezid.user
+  config.password = ENV['EZID_PASSWORD'] || Settings.ezid.password
+  config.timeout  = ENV['EZID_TIMEOUT'] || Settings.ezid.timeout
+  config.default_shoulder = ENV['EZID_DEFAULT_SHOULDER'] || Settings.ezid.shoulder
 end
