@@ -44,12 +44,9 @@
               <%= render 'representative_media', presenter: @presenter, viewer: true %>
             </div>
           <% end %>
-          <!--<div class="col-sm-3 text-center">
-            <%# Removed the social media and thumbnail section %>
-            <%# render 'representative_media', presenter: @presenter, viewer: false unless @presenter.universal_viewer? %>
-            <%# render 'citations', presenter: @presenter %>
-            <%# render 'social_media' %>
-          </div>-->
+          <div class="col-sm-3 text-center">
+            <%= render 'citations', presenter: @presenter %>
+          </div>
           <div class="col-sm-12">
             <table class="table table-striped data-set-table">
               <thead>
