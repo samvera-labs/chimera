@@ -9,7 +9,7 @@ Based on https://github.com/mlibrary/deepblue/
 ## Credits
 Samvera Project Community.
 
-Indian University Library.
+Indiana University Libraries.
 
 University of Michigan Library.
 
