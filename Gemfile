@@ -64,7 +64,7 @@ gem 'jbuilder', '~> 2.5'
 # Begin security vulnerability mitigation
 # bundle update --source gem-name
 gem 'bootstrap-sass', '~> 3.4.1'
-gem 'loofah', '~> 2.2.3'
+gem 'loofah', '~> 2.19.1'
 gem 'rack', '~> 2.0.6'
 gem 'rubyzip', '~> 1.2.2'
 gem 'sassc', '>= 2.0.0'
